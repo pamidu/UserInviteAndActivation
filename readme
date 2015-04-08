@@ -1,0 +1,20 @@
+User Invitation system 
+
+1.user invitation(Registation)
+	url : http://localhost:8787/UserRegister/
+	POST data sample :{"SenderEmail":"pamidu@duosoftware.com","ReceiverEmail":"pamidu@live.com"}
+
+	Token will auto genarate and  invitation mail send to the given email address and data will register in Elasticsearch database(SenderEmail:string,ReceiverEmail:string,Token:string,Activation:boolean)
+
+
+2.User Activation 
+	url:http://localhost:8787/Activate/{Token}
+	GET	
+
+	Search Token from Elasticsearch database Via Objectstore and if token found user will activate and store new data into the database 
+
+
+
+Need to change Mail server datails such as mail server name  ,password ,port accordingly,Message body  (Method start from line 104)
+http headers securityToken,log
+message text need to change line number 89,90 

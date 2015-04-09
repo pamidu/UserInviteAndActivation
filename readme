@@ -2,7 +2,7 @@ User Invitation system
 
 1.user invitation(Registation)
 	url : http://localhost:8787/UserRegister/
-	POST data sample :{"SenderEmail":"pamidu@duosoftware.com","ReceiverEmail":"pamidu@live.com"}
+	POST data sample :{"SenderEmail":"ABC@Example.com","ReceiverEmail":"XYZ@Example.com"}
 
 	Token will auto genarate and  invitation mail send to the given email address and data will register in Elasticsearch database(SenderEmail:string,ReceiverEmail:string,Token:string,Activation:boolean)
 

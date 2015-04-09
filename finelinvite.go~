@@ -32,22 +32,16 @@ type Activation struct {
 	ReceiverEmail string
 	Token         string
 }
-type Registation struct {
-	Email    string
-	Username string
-	Password string
-}
 
 //Service Definition
 type HelloService struct {
 	gorest.RestService
 	//gorest.RestService `root:"/tutorial/"`
-	helloWorld      gorest.EndPoint `method:"GET" path:"/hello-world/" output:"string"`
-	sayHello        gorest.EndPoint `method:"GET" path:"/hello/{name:string}" output:"string"`
-	userInvite      gorest.EndPoint `method:"POST" path:"/UserInvite/" postdata:"InvitEmail"`
-	userRegistation gorest.EndPoint `method:"POST" path:"/UserRegistation/" postdata:"Registation"`
-	userActivation  gorest.EndPoint `method:"POST" path:"/UserActivation/" postdata:"Token"`
-	userActive      gorest.EndPoint `method:"GET" path:"/Activate/{token:string}" output:"string"`
+	helloWorld     gorest.EndPoint `method:"GET" path:"/hello-world/" output:"string"`
+	sayHello       gorest.EndPoint `method:"GET" path:"/hello/{name:string}" output:"string"`
+	userRegister   gorest.EndPoint `method:"POST" path:"/UserRegister/" postdata:"InvitEmail"`
+	userActivation gorest.EndPoint `method:"POST" path:"/UserActivation/" postdata:"Token"`
+	userActive     gorest.EndPoint `method:"GET" path:"/Activate/{token:string}" output:"string"`
 }
 
 func main() {
@@ -59,23 +53,13 @@ func (serv HelloService) UserActive(token string) string {
 	result := Objectstorecallingsearch(token)
 	return result
 }
-func (serv HelloService) UserRegistation(r Registation) {
-	token := randToken()
-	var jsonStr = []byte("{\"Object\":{\"Email\":\"" + r.Email + "\",\"Username\":\"" + r.Username + "\",\"Password\":\"" + r.Password + "\",\"Token\":\"" + token + "\",\"Activated\":\"False\"}, \"Parameters\":{\"KeyProperty\":\"Email\"}}")
-	ObjectstorecallingInvite(jsonStr)
-	fmt.Println(r.Email, r.Password, r.Username)
-	invitationmail("pamidu@duosoftware.com", r.Email, token)
-	serv.ResponseBuilder().SetResponseCode(200)
-}
-func (serv HelloService) UserInvite(u InvitEmail) {
+func (serv HelloService) UserRegister(u InvitEmail) {
 
 	fmt.Println(u.ReceiverEmail, "xxxxxxxx", u.SenderEmail)
 
 	token := randToken()
 	fmt.Println(token)
 	invitationmail(u.SenderEmail, u.ReceiverEmail, token)
-	var jsonStr = []byte("{\"Object\":{\"SenderEmail\":\"" + u.ReceiverEmail + "\",\"ReceiverEmail\":\"" + u.SenderEmail + "\",\"Token\":\"" + token + "\",\"Activated\":\"False\"}, \"Parameters\":{\"KeyProperty\":\"ReceiverEmail\"}}")
-	ObjectstorecallingInvite(jsonStr)
 	serv.ResponseBuilder().SetResponseCode(200).Write([]byte("from :" + u.SenderEmail + "      to :" + u.ReceiverEmail))
 }
 func (serv HelloService) UserActivation(t Token) {
@@ -117,7 +101,7 @@ func invitationmail(sender, receiver, token string) {
 	// Connect to the SMTP Server
 	servername := "smtp.gmail.com:465"
 	host, _, _ := net.SplitHostPort(servername)
-	auth := smtp.PlainAuth("", sender, "Pol-19901222", host)
+	auth := smtp.PlainAuth("", sender, PASSWORD, host)
 
 	// TLS config
 	//fmt.Print("7")
